@@ -11,10 +11,4 @@ For python 2 users
 
 
 Manages up to 4 different kind of mathematical operations and 3 specific text commands:
--> +
--> -
--> *
--> / 
--> help
--> clear
--> quit
+(+, -, *, /, help, clear, quit)
