@@ -4,39 +4,6 @@ class Calculator:
   def __init__(self):
     print("Welcome to Sucaba, your new RPN calculator !\nType 'help' to get all commands and usage")
 
-  def doOp(self, token, stack):
-    ## Segfaults on "2 3 quit, 2 3 help for ex, need another way of calling ops"
-
-    if (len(stack) > 1):
-      b = stack.pop()
-      a = stack.pop()
-      res = self.Ops[token](a, b)
-      stack.append(res)
-      return 0
-    else:
-      self.Ops[token]()
-    return 1
-
-  def isOperand(self, token):
-    if (self.Ops.get(token, '?') != '?'):
-      return True
-    return False
-
-  def isNumber(self, token):
-    if (token.lstrip('+-').isdigit()):
-      return True
-    return False
-
-  def handleToken(self, token, stack):
-    if (self.isOperand(token)):
-      return self.doOp(token, stack)
-    elif (self.isNumber(token)):
-      stack.append(float(token))
-      return 0
-    else:
-      print("An unexpected token was found: %s" % (token))
-      return 1
-
   def process(self, tokens):
     stack = []
     for token in tokens:
@@ -48,6 +15,42 @@ class Calculator:
       #@TODO: print integer nb w/o '.0'
       print(stack.pop())
 
+  def handleToken(self, token, stack):
+    if (self.isOperand(token)):
+      return self.doOp(token, stack)
+    elif (self.isNumber(token)):
+      stack.append(float(token))
+      return 0
+    else:
+      print("An unexpected token was found: %s" % (token))
+      return 1
+
+  def doOp(self, token, stack):
+    if (len(stack) > 1):
+      b = stack.pop()
+      a = stack.pop()
+      res = self.Ops[token](a, b)
+      stack.append(res)
+      if (res != None):
+        return 0
+    else:
+      self.Ops[token]()
+    return 1
+
+##### UTILS
+  def isOperand(self, token):
+    if (self.Ops.get(token, '?') != '?'):
+      return True
+    return False
+
+  def isNumber(self, token):
+    try:
+      float(token)
+      return True
+    except ValueError:
+      return False
+
+ ##### OPS
   def add(x, y): 
     return x + y
 
@@ -60,17 +63,18 @@ class Calculator:
   def divide(x, y): 
     return x / y
 
-  def clear():
+  # varargs to ignore numbers before command (ex: 2 2 help)
+  def clear(*args):
     os.system('cls' if os.name == 'nt' else 'clear')
-    return
 
-  def shutdown():
+  def shutdown(*args):
     quit()
 
-  def showHelp():
+  def showHelp(*args):
     print("Type 'quit' to exit this breathtaking program\nType 'clear' to clear your screen\n\
       Note: If the program receives a command, it ignores any other input !\n")
 
+## function dict
   Ops = {
     '+': add,
     '-': substract,
