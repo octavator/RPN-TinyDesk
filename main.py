@@ -1,18 +1,13 @@
 import sys
-from calculator import Calculator
+from calculator             import Calculator
+from parser                 import Parser
+from console_user_interface import ConsoleUserInterface
 
 def main():
-  calc = Calculator()
-  while True:
-    #PYTHON 2.X
-    if (len(sys.argv) > 1 and sys.argv[1] == '-p2'):
-     userInput = raw_input("RPN Calculator >")
-    #PYTHON 3.X
-    else:
-      userInput = input("RPN Calculator >")
-
-    tokens = userInput.split()
-    calc.process(tokens)
+  calculator = Calculator()
+  parser     = Parser(calculator)
+  ui         = ConsoleUserInterface(parser, calculator)
+  ui.run()
 
 if __name__ == "__main__":
     # execute only if run as a script
